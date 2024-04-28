@@ -1,0 +1,24 @@
+POST http://localhost:8081/
+content-type: application/json
+
+{
+    "cep": "18085090"
+}
+
+###
+
+POST http://localhost:8081/
+content-type: application/json
+
+{
+    "cep": "18085"
+}
+
+###
+
+POST http://localhost:8081/
+content-type: application/json
+
+{
+    "cep": "18085090M"
+}
