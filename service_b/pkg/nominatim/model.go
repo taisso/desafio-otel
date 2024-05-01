@@ -1,7 +1,9 @@
 package nominatim
 
+import "context"
+
 type INominatim interface {
-	GetLocation(cep string) (*Nominatim, error)
+	GetLocation(ctx context.Context, cep string) (*Nominatim, error)
 }
 
 type Address struct {

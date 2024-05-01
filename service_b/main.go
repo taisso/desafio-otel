@@ -65,7 +65,7 @@ func (ct CepTemperature) GetCepTemperatureHandler(w http.ResponseWriter, r *http
 	ctx := r.Context()
 	ctx = otel.GetTextMapPropagator().Extract(ctx, carrier)
 
-	_, span := ct.tracer.Start(ctx, "service-B")
+	_, span := ct.tracer.Start(ctx, "service-b")
 	defer span.End()
 
 	cep := r.PathValue("cep")
@@ -75,7 +75,7 @@ func (ct CepTemperature) GetCepTemperatureHandler(w http.ResponseWriter, r *http
 		return
 	}
 
-	nominatimResponse, err := ct.nominatim.GetLocation(cep)
+	nominatimResponse, err := ct.nominatim.GetLocation(ctx, cep)
 	if err != nil {
 		if err == nominatim.ErrNotFound {
 			ToError(w, http.StatusNotFound, ErrNotFoundZipCode)
@@ -89,7 +89,7 @@ func (ct CepTemperature) GetCepTemperatureHandler(w http.ResponseWriter, r *http
 	lat := nominatimResponse.Lat
 	lng := nominatimResponse.Lon
 
-	weatherResponse, err := ct.weather.GetWeather(lat, lng)
+	weatherResponse, err := ct.weather.GetWeather(ctx, lat, lng)
 	if err != nil {
 		log.Println(err)
 		ToError(w, http.StatusInternalServerError, ErrStatusInternalServer)
@@ -179,7 +179,7 @@ func main() {
 
 	apiKey := os.Getenv("WEATHER_API_KEY")
 	tracer := otel.Tracer("service-b-tracer")
-	cepTemperature := NewCepTemperature(weather.NewWeather(apiKey), nominatim.NewNominatim(), tracer)
+	cepTemperature := NewCepTemperature(weather.NewWeather(apiKey, tracer), nominatim.NewNominatim(tracer), tracer)
 	router.Handle("GET /{cep}", cepTemperature)
 
 	http.ListenAndServe(":8080", router)

@@ -1,7 +1,9 @@
 package weather
 
+import "context"
+
 type IWeather interface {
-	GetWeather(lat, lon string) (*Weather, error)
+	GetWeather(ctx context.Context, lat, lon string) (*Weather, error)
 }
 
 type Weather struct {

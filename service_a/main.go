@@ -116,7 +116,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	ctx = otel.GetTextMapPropagator().Extract(ctx, carrier)
 
-	ctx, span := tracer.Start(ctx, "service-A")
+	ctx, span := tracer.Start(ctx, "service-a")
 	defer span.End()
 
 	body, err := io.ReadAll(r.Body)
