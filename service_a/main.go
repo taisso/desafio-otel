@@ -45,7 +45,7 @@ func InitProvider() (func(context.Context) error, error) {
 
 	res, err := resource.New(ctx,
 		resource.WithAttributes(
-			semconv.ServiceName("Provider-service-A"),
+			semconv.ServiceName("service-a"),
 		),
 	)
 	if err != nil {
@@ -111,12 +111,12 @@ func main() {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	tracer := otel.Tracer("service-a-tracer")
+	tracer := otel.Tracer("service-tracer-a")
 	carrier := propagation.HeaderCarrier(r.Header)
 	ctx := r.Context()
 	ctx = otel.GetTextMapPropagator().Extract(ctx, carrier)
 
-	ctx, span := tracer.Start(ctx, "service-a")
+	ctx, span := tracer.Start(ctx, "get-service-b")
 	defer span.End()
 
 	body, err := io.ReadAll(r.Body)

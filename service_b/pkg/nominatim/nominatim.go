@@ -25,7 +25,7 @@ func NewNominatim(tracer trace.Tracer) *NominatimApi {
 }
 
 func (n *NominatimApi) GetLocation(ctx context.Context, cep string) (*Nominatim, error) {
-	ctx, span := n.tracer.Start(ctx, "service-b:get-cep")
+	ctx, span := n.tracer.Start(ctx, "get-cep")
 	defer span.End()
 
 	nominatimUrl := fmt.Sprintf("https://nominatim.openstreetmap.org/search?q=%s&format=jsonv2&addressdetails=1", cep)

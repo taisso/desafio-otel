@@ -19,7 +19,7 @@ func NewWeather(apiKey string, tracer trace.Tracer) *WeatherApi {
 }
 
 func (w *WeatherApi) GetWeather(ctx context.Context, lat, lon string) (*Weather, error) {
-	ctx, span := w.trace.Start(ctx, "service-b:get-temp")
+	ctx, span := w.trace.Start(ctx, "get-temp")
 	defer span.End()
 
 	weatherUrl := fmt.Sprintf("https://api.weatherapi.com/v1/current.json?key=%s&q=%s,%s", w.apiKey, lat, lon)

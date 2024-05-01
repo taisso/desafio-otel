@@ -65,9 +65,6 @@ func (ct CepTemperature) GetCepTemperatureHandler(w http.ResponseWriter, r *http
 	ctx := r.Context()
 	ctx = otel.GetTextMapPropagator().Extract(ctx, carrier)
 
-	_, span := ct.tracer.Start(ctx, "service-b")
-	defer span.End()
-
 	cep := r.PathValue("cep")
 
 	if len(cep) != 8 {
@@ -109,7 +106,7 @@ func InitProvider() (func(context.Context) error, error) {
 
 	res, err := resource.New(ctx,
 		resource.WithAttributes(
-			semconv.ServiceName("Provider-service-B"),
+			semconv.ServiceName("service-b"),
 		),
 	)
 	if err != nil {
